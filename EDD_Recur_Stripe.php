@@ -70,7 +70,7 @@ class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
 			try {
 				$this->plan = \Stripe\Plan::create( array(
 					"amount"            => $recurring_charge,
-					"interval"          => $this->day,
+					"interval"          => $this->interval,
 					"name"              => $plan_name,
 					"currency"          => "usd",
 					'trial_period_days' => 365,

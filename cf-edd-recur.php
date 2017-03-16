@@ -42,6 +42,7 @@ add_filter( 'cf_stripe_pre_payment', function( $return, $token, $config, $form )
 		return $return;
 	}
 
+	EDD_Recurring();
 	//@todo CONDITIONAL FOR FORM!
 	include __DIR__ . '/EDD_Recur_Stripe.php';
 	$recur = new EDD_Recur_Stripe();
