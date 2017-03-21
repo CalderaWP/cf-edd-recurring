@@ -73,7 +73,8 @@ class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
 					"interval"          => $this->interval,
 					"name"              => $plan_name,
 					"currency"          => "usd",
-					'trial_period_days' => 365,
+					//'trial_period_days' => 365,
+					'trial_period_days' => 1,
 					"id"                => sanitize_title_with_dashes( $plan_name ),
 					'statement_descriptor' => 'cf-custom-bundle'
 				) );
