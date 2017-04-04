@@ -20,6 +20,8 @@ class CF_EDD_Recur_Control {
 				$payment->set_renewal_charge( $saved_data->get_renewal_charge() );
 				$payment->set_subscription_period( $saved_data->get_subscription_period() );
 				$payment->set_trial_length( $saved_data->get_trial_length() );
+				$payment->set_profile_id( $saved_data->get_profile_id() );
+
 				$creator = new CF_EDD_Recur_Subscription( $payment, $download_id );
 				$creator->create();
 			}else{

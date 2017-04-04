@@ -156,4 +156,11 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 		return $this->get_amount();
 	}
 
+	/**
+	 * @return int|string
+	 */
+	public function get_profile_id(){
+		return $this->subscription->id;
+	}
+
 }

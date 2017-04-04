@@ -25,4 +25,10 @@ interface CF_EDD_RI_Subscription {
 	 */
 	public function get_renewal_charge();
 
+	/**
+	 * @return int|string
+	 */
+	public function get_profile_id();
+
+
 }

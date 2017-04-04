@@ -26,6 +26,8 @@ class CF_EDD_Recur_Data implements  CF_EDD_RI_Subscription{
 	 */
 	protected $renewal_charge;
 
+	protected  $profile_id;
+
 	/**
 	 * @return float
 	 */
@@ -52,6 +54,13 @@ class CF_EDD_Recur_Data implements  CF_EDD_RI_Subscription{
 	 */
 	public function get_renewal_charge(){
 		return $this->renewal_charge;
+	}
+
+	/**
+	 * @return int|string
+	 */
+	public function get_profile_id(){
+		return $this->profile_id;
 	}
 
 
@@ -116,7 +125,7 @@ class CF_EDD_Recur_Data implements  CF_EDD_RI_Subscription{
 		$obj->amount = $data_source->get_renewal_charge();
 		$obj->trial_length = $data_source->get_trial_length();
 		$obj->subscription_period = $data_source->get_subscription_period();
-
+		$obj->profile_id = $data_source->get_profile_id();
 		return $obj;
 	}
 

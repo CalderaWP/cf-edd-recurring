@@ -27,6 +27,11 @@ class CF_EDD_Recur_Payment extends EDD_Payment implements CF_EDD_RI_Subscription
 	 */
 	const SUB_PERIOD = 'cf_edd_reccur_period';
 
+	/**
+	 * Meta key for storing profile ID
+	 */
+	const PROF_ID_KEY = 'cf_edd_prof_id';
+
 
 	/**
 	 * @var EDD_Subscription
@@ -149,6 +154,14 @@ class CF_EDD_Recur_Payment extends EDD_Payment implements CF_EDD_RI_Subscription
 		return $period;
 	}
 
+	public function get_profile_id(){
+		return $this->get_meta( self::PROF_ID_KEY );
+	}
+
+	public function set_profile_id( $id ){
+		return $this->update_meta( self::PROF_ID_KEY, $id );
+	}
+
 	/**
 	 * @param $download_id
 	 *
@@ -166,6 +179,7 @@ class CF_EDD_Recur_Payment extends EDD_Payment implements CF_EDD_RI_Subscription
 			'recurring_amount' => $this->get_renewal_charge(),
 			'bill_times' => 0,
 			'expiration' => date('Y-m-d', strtotime('+1 years')),
+			'profile_id' => $this->get_profile_id()
 		);
 
 		$subscription = $subscriber->add_subscription( $args );
