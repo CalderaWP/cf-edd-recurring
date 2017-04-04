@@ -2,7 +2,7 @@
 /**
  Plugin Name: Caldera Forms EDD Recurring
  Description: Support layer for EDD recurring payments for Caldera Forms EDD
- Version: 0.0.4
+ Version: 0.0.4.1
  */
 //CF58c9fd77084c3
 /**
