@@ -2,9 +2,9 @@
 
 
 /**
- * Class EDD_Recur_Stripe
+ * Create payments/plans with Stripe
  */
-class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
+class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription {
 
 	protected $token;
 
@@ -35,8 +35,18 @@ class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
 	/** @var string  */
 	protected $interval = 'day';
 
-	protected $renewal_rate = 2;
-	public function create_payment_profiles(  ){
+	protected $trial_period_days;
+
+	/**
+	 * @var EDD_Customer
+	 */
+	protected $edd_customer;
+
+	public function get_customer(){
+		return $this->customer;
+	}
+
+	public function create_payment_profiles( $customer_id ){
 		$plan_name = 'Caldera Forms Custom Bundle For ' . $this->email . ' Created on' . date( Caldera_Forms::time_format() );
 		try {
 			$this->customer = \Stripe\Customer::create( array(
@@ -44,14 +54,12 @@ class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
 				"source"      => $this->token,
 				'email' => $this->email,
 				'metadata'    => array(
-					'edd_customer_id' => $this->customer_id
+					'edd_customer_id' => $customer_id
 				)
 			) );
 		} catch ( Exception $e ) {
 			return $e->getMessage();
 		}
-
-		$recurring_charge =  round( $this->charge / $this->renewal_rate, 2, PHP_ROUND_HALF_DOWN  );
 
 		try {
 			$this->charge = \Stripe\Charge::create( [
@@ -64,17 +72,19 @@ class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
 			return $e->getMessage();
 		}
 
+		$this->trial_period_days = 365;
+		$this->trial_period_days = 1;
+
 		try {
 			$this->plan = \Stripe\Plan::retrieve( sanitize_title_with_dashes( $plan_name ) );
 		} catch ( Exception $e ) {
 			try {
 				$this->plan = \Stripe\Plan::create( array(
-					"amount"            => $recurring_charge,
+					"amount"            => $this->amount,
 					"interval"          => $this->interval,
 					"name"              => $plan_name,
 					"currency"          => "usd",
-					//'trial_period_days' => 365,
-					'trial_period_days' => 1,
+					'trial_period_days' => $this->trial_period_days,
 					"id"                => sanitize_title_with_dashes( $plan_name ),
 					'statement_descriptor' => 'cf-custom-bundle'
 				) );
@@ -106,10 +116,10 @@ class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
 	}
 
 	/**
-	 * @param $stripe_token
+	 * @param $token
 	 */
-	public function set_token( $stripe_token ){
-		$this->token = $stripe_token;
+	public function set_token( $token ){
+		$this->token = $token;
 	}
 
 	/**
@@ -119,15 +129,31 @@ class EDD_Recur_Stripe  extends EDD_Recurring_Stripe {
 	 * @param array $form Form configuration.
 	 */
 	public function setup_form_cf($config, $form ){
+		\Stripe\Stripe::setApiKey($config['secret']);
 		$this->amount = Caldera_Forms::get_field_data( $config['amount'], $form ) * 100;
-		$this->amount =  round( $this->amount / $this->renewal_rate, 2, PHP_ROUND_HALF_DOWN  );
-		$this->email = Caldera_Forms::get_field_data( $config['email'], $form );
-		$this->purchase_data[ 'purchase_email' ] = $this->email;
-		$this->purchase_data[ 'user_email' ] = $this->email;
-		$this->purchase_data[ 'purchase_key' ] = rand();
+		$this->amount = round( $this->amount / 2, 2, PHP_ROUND_HALF_DOWN );
+
 	}
 
+	public function get_amount(){
+		//needs to be put back to dollars instead of cents
+		return $this->amount / 100;
+	}
 
+	public function get_subscription_period(){
+		return $this->interval;
+	}
 
+	public function get_tri(){
+		return $this->trial_period_days;
+	}
+
+	public function get_trial_length(){
+		return $this->trial_period_days;
+	}
+
+	public function get_renewal_charge(){
+		return $this->get_amount();
+	}
 
 }
