@@ -130,6 +130,7 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 	 */
 	public function setup_form_cf( array $config, array $form ){
 		\Stripe\Stripe::setApiKey($config['secret']);
+		$this->email = Caldera_Forms::get_field_data( $config['email'], $form );
 		$this->amount = Caldera_Forms::get_field_data( $config['amount'], $form ) * 100;
 		$this->amount = round( $this->amount / 2, 2, PHP_ROUND_HALF_DOWN );
 
