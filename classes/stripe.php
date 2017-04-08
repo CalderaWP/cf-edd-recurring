@@ -47,7 +47,7 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 	}
 
 	public function create_payment_profiles( $customer_id ){
-		$plan_name = 'Caldera Forms Custom Bundle For ' . $this->email . ' Created on' . date( Caldera_Forms::time_format() );
+		$plan_name = 'Caldera Forms Custom Bundle For ' . $this->email . ' Created on ' . date( Caldera_Forms::time_format() );
 		try {
 			$this->customer = \Stripe\Customer::create( array(
 				"description" => $this->email,
@@ -73,7 +73,7 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 		}
 
 		$this->trial_period_days = 365;
-		$this->trial_period_days = 1;
+		//$this->trial_period_days = 1;
 
 		try {
 			$this->plan = \Stripe\Plan::retrieve( sanitize_title_with_dashes( $plan_name ) );
@@ -132,27 +132,35 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 		\Stripe\Stripe::setApiKey($config['secret']);
 		$this->email = Caldera_Forms::get_field_data( $config['email'], $form );
 		$this->amount = Caldera_Forms::get_field_data( $config['amount'], $form ) * 100;
-		$this->amount = round( $this->amount / 2, 2, PHP_ROUND_HALF_DOWN );
+		$this->amount = round( $this->amount / 2, 0, PHP_ROUND_HALF_DOWN );
 
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_amount(){
 		//needs to be put back to dollars instead of cents
 		return $this->amount / 100;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_subscription_period(){
 		return $this->interval;
 	}
 
-	public function get_tri(){
-		return $this->trial_period_days;
-	}
-
+	/**
+	 * @inheritdoc
+	 */
 	public function get_trial_length(){
 		return $this->trial_period_days;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function get_renewal_charge(){
 		return $this->get_amount();
 	}
