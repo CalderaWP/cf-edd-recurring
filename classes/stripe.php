@@ -33,8 +33,9 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 	protected $charge;
 
 	/** @var string  */
-	protected $interval = 'day';
+	protected $interval = 'year';
 
+	/** @var  int */
 	protected $trial_period_days;
 
 	/**
