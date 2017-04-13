@@ -45,6 +45,7 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 	 */
 	protected $edd_customer;
 
+
 	public function get_customer(){
 		return $this->customer;
 	}
@@ -75,9 +76,6 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 			return $e->getMessage();
 		}
 
-		$this->trial_period_days = 365;
-		//$this->trial_period_days = 1;
-
 		try {
 			$this->plan = \Stripe\Plan::retrieve( sanitize_title_with_dashes( $plan_name ) );
 		} catch ( Exception $e ) {
@@ -87,7 +85,6 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 					"interval"          => $this->interval,
 					"name"              => $plan_name,
 					"currency"          => "usd",
-					'trial_period_days' => $this->trial_period_days,
 					"id"                => sanitize_title_with_dashes( $plan_name ),
 					'statement_descriptor' => 'cf-custom-bundle'
 				) );
