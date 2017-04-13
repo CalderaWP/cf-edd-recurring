@@ -2,9 +2,8 @@
 /**
  Plugin Name: Caldera Forms EDD Recurring
  Description: Support layer for EDD recurring payments for Caldera Forms EDD
- Version: 0.1.0
+ Version: 0.1.1
  */
-//CF58c9fd77084c3
 /**
  * @param string $form_id Form ID
  * @param string $type Optional. Processor type. stripe|paypal Default is stripe.
