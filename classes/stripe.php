@@ -38,6 +38,8 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 	/** @var  int */
 	protected $trial_period_days;
 
+	/** @var  int */
+	protected $renwal_charge;
 	/**
 	 * @var EDD_Customer
 	 */
@@ -133,7 +135,7 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 		\Stripe\Stripe::setApiKey($config['secret']);
 		$this->email = Caldera_Forms::get_field_data( $config['email'], $form );
 		$this->amount = Caldera_Forms::get_field_data( $config['amount'], $form ) * 100;
-		$this->amount = round( $this->amount / 2, 0, PHP_ROUND_HALF_DOWN );
+		$this->renwal_charge = round( $this->amount / 2, 0, PHP_ROUND_HALF_DOWN );
 
 	}
 
@@ -163,7 +165,8 @@ class CF_EDD_Recur_Stripe  implements CF_EDD_RI_Gateway, CF_EDD_RI_Subscription 
 	 * @inheritdoc
 	 */
 	public function get_renewal_charge(){
-		return $this->get_amount();
+		//needs to be put back to dollars instead of cents
+		return $this->renwal_charge / 100;
 	}
 
 	/**
